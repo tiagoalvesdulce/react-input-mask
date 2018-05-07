@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 
 import parseMask from './utils/parseMask';
 import { isWindowsPhoneBrowser } from './utils/environment';
@@ -130,8 +131,7 @@ class InputElement extends React.Component {
       return input;
     }
 
-    // React 0.13
-    return React.findDOMNode(input);
+    return ReactDOM.findDOMNode(input);
   }
 
   getInputValue = () => {
@@ -579,7 +579,7 @@ class InputElement extends React.Component {
   }
 
   render() {
-    var { mask, alwaysShowMask, maskChar, formatChars, inputRef, beforeChange, ...props } = this.props;
+    var { mask, alwaysShowMask, maskChar, formatChars, inputRef, CustomInput, beforeChange, ...props } = this.props;
 
     if (this.maskOptions.mask) {
       if (!props.disabled && !props.readOnly) {
@@ -594,7 +594,12 @@ class InputElement extends React.Component {
       }
     }
 
-    return <input ref={this.handleRef} {...props} onFocus={this.onFocus} onBlur={this.onBlur} />;
+    return CustomInput ? React.cloneElement(CustomInput, {
+      ref: this.handleRef,
+      onFocus: this.onFocus,
+      onBlur: this.onBlur,
+      ...props,
+    }) : <input ref={this.handleRef} {...props} onFocus={this.onFocus} onBlur={this.onBlur} />
   }
 }
 
